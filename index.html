@@ -2,406 +2,364 @@
 <html lang="pt-BR" class="dark">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciador de Tarefas Pro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              200: '#bae6fd',
-              300: '#7dd3fc',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              800: '#075985',
-              900: '#0c4a6e',
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
             },
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          },
-        },
-      },
-    }
-  </script>
-  <style>
-    /* Estilos personalizados */
-    .modal {
-      transition: opacity 0.25s ease;
-    }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
 
-    .modal-content {
-      transform: translateY(-50px);
-      transition: transform 0.3s ease;
-    }
+        .modal-content {
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
 
-    .modal.active .modal-content {
-      transform: translateY(0);
-    }
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
 
-    .custom-checkbox {
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #cbd5e1;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
 
-    .dark .custom-checkbox {
-      border-color: #475569;
-    }
+        .dark .custom-checkbox {
+            border-color: #475569;
+        }
 
-    .custom-checkbox:checked {
-      background-color: #0ea5e9;
-      border-color: #0ea5e9;
-    }
+        .custom-checkbox:checked {
+            background-color: #0ea5e9;
+            border-color: #0ea5e9;
+        }
 
-    .custom-checkbox:checked::after {
-      content: '\2714';
-      position: absolute;
-      color: white;
-      font-size: 14px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+        .custom-checkbox:checked::after {
+            content: '\2713';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    .progress-ring {
-      transform: rotate(-90deg);
-    }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
 
-    .task-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+        .task-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
 
-    .task-card:hover {
-      transform: translateY(-2px);
-    }
+        .task-card:hover {
+            transform: translateY(-2px);
+        }
 
-    .subtask-collapse {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-    }
+        .subtask-collapse {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
 
-    .subtask-collapse.show {
-      max-height: 1000px;
-      transition: max-height 0.5s ease-in;
-    }
+        .subtask-collapse.show {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-    .loading {
-      animation: fadeIn 0.5s ease-in-out;
-    }
+        .loading {
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
 
-      to {
-        opacity: 1;
-      }
-    }
+            to {
+                opacity: 1;
+            }
+        }
 
-    .progress-bar {
-      transition: all width 2s ease-in-out;
-    }
+        .progress-bar {
+            transition: all width 2s ease-in-out;
+        }
 
-    .progress-bar-0 {
-      background-color: #ef4444;
-    }
+        .progress-bar-0 {
+            background-color: #ef4444;
+        }
 
-    /* Vermelho */
-    .progress-bar-25 {
-      background-color: #f97316;
-    }
+        .progress-bar-25 {
+            background-color: #f97316;
+        }
 
-    /* Laranja */
-    .progress-bar-50 {
-      background-color: #facc15;
-    }
+        .progress-bar-50 {
+            background-color: #facc15;
+        }
 
-    /* Amarelo */
-    .progress-bar-75 {
-      background-color: #84cc16;
-    }
+        .progress-bar-75 {
+            background-color: #84cc16;
+        }
 
-    /* Verde claro */
-    .progress-bar-100 {
-      background-color: #22c55e;
-    }
+        .progress-bar-100 {
+            background-color: #22c55e;
+        }
 
-    /* Verde */
+        .checkbox-0:checked {
+            background-color: #ef4444;
+            border-color: #ef4444;
+        }
 
-    .checkbox-0:checked {
-      background-color: #ef4444;
-      border-color: #ef4444;
-    }
+        .checkbox-25:checked {
+            background-color: #f97316;
+            border-color: #f97316;
+        }
 
-    .checkbox-25:checked {
-      background-color: #f97316;
-      border-color: #f97316;
-    }
+        .checkbox-50:checked {
+            background-color: #facc15;
+            border-color: #facc15;
+        }
 
-    .checkbox-50:checked {
-      background-color: #facc15;
-      border-color: #facc15;
-    }
+        .checkbox-75:checked {
+            background-color: #84cc16;
+            border-color: #84cc16;
+        }
 
-    .checkbox-75:checked {
-      background-color: #84cc16;
-      border-color: #84cc16;
-    }
+        .checkbox-100:checked {
+            background-color: #22c55e;
+            border-color: #22c55e;
+        }
 
-    .checkbox-100:checked {
-      background-color: #22c55e;
-      border-color: #22c55e;
-    }
-  </style>
+        .congrats-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            border-radius: 4px;
+            z-index: 1000;
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans">
-  <!-- Navbar -->
-  <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex items-center">
-          <i class="fas fa-tasks text-primary-500 text-2xl mr-2"></i>
-          <h1 class="text-xl font-semibold text-gray-900 dark:text-white">TaskMaster Pro</h1>
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-tasks text-primary-500 text-2xl mr-2"></i>
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-white">TaskMaster Pro</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSearch()"
+                        class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
+                    <button onclick="toggleTheme()"
+                        class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400">
+                        <i class="fas fa-moon text-xl dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-xl"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="flex items-center space-x-4">
-          <button onclick="toggleSearch()"
-            class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400">
-            <i class="fas fa-search text-xl"></i>
-          </button>
-          <button onclick="toggleTheme()"
-            class="text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400">
-            <i class="fas fa-moon text-xl dark:hidden"></i>
-            <i class="fas fa-sun hidden dark:block text-xl"></i>
-          </button>
-          <button onclick="showModal('newListModal')"
-            class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center">
+    </nav>
+
+    <!-- Barra de pesquisa (inicialmente oculta) -->
+    <div id="searchBar" class="hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative">
+                <input type="text" placeholder="Pesquisar tarefas..." onkeyup="searchTasks(this.value)"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container principal -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <button onclick="showModal('newListModal')"
+            class="mb-6 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center">
             <i class="fas fa-plus mr-2"></i>
             Nova Lista
-          </button>
+        </button>
+        <!-- Container de Listas -->
+        <div id="listsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Listas serão renderizadas aqui -->
         </div>
-      </div>
-    </div>
-  </nav>
+    </main>
 
-  <!-- Barra de pesquisa (inicialmente oculta) -->
-  <div id="searchBar" class="hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
-    <div class="max-w-7xl mx-auto">
-      <div class="relative">
-        <input type="text" placeholder="Pesquisar tarefas..." onkeyup="searchTasks(this.value)"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-        <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-      </div>
-    </div>
-  </div>
-
-  <!-- Container principal -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Status/Filtros -->
-    <div class="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center">
-        <div class="rounded-full bg-blue-100 dark:bg-blue-900 p-3 mr-4">
-          <i class="fas fa-list text-blue-500 dark:text-blue-400"></i>
+    <!-- Modal de Nova Lista -->
+    <div id="newListModal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Lista</h3>
+                <input type="text" id="newListTitle" placeholder="Título da Lista"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="hideModal('newListModal')"
+                        class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        Cancelar
+                    </button>
+                    <button onclick="createList()"
+                        class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
+                        Criar Lista
+                    </button>
+                </div>
+            </div>
         </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total de Listas</h3>
-          <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="totalLists">0</p>
-        </div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center">
-        <div class="rounded-full bg-green-100 dark:bg-green-900 p-3 mr-4">
-          <i class="fas fa-check text-green-500 dark:text-green-400"></i>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Tarefas Concluídas</h3>
-          <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="completedTasks">0</p>
-        </div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center">
-        <div class="rounded-full bg-yellow-100 dark:bg-yellow-900 p-3 mr-4">
-          <i class="fas fa-clock text-yellow-500 dark:text-yellow-400"></i>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Em Progresso</h3>
-          <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="inProgressTasks">0</p>
-        </div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center">
-        <div class="rounded-full bg-red-100 dark:bg-red-900 p-3 mr-4">
-          <i class="fas fa-exclamation text-red-500 dark:text-red-400"></i>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Pendentes</h3>
-          <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="pendingTasks">0</p>
-        </div>
-      </div>
     </div>
 
-    <!-- Container de Listas -->
-    <div id="listsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Listas serão renderizadas aqui -->
-    </div>
-  </main>
-
-  <!-- Modal de Nova Lista -->
-  <div id="newListModal"
-    class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-    <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-      <div class="p-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Lista</h3>
-        <input type="text" id="newListTitle" placeholder="Título da Lista"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
-        <div class="flex justify-end space-x-3">
-          <button onclick="hideModal('newListModal')"
-            class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-            Cancelar
-          </button>
-          <button onclick="createList()" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
-            Criar Lista
-          </button>
+    <!-- Modal de Nova Tarefa -->
+    <div id="newTaskModal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Tarefa</h3>
+                <input type="hidden" id="currentListId">
+                <input type="text" id="newTaskTitle" placeholder="Título da Tarefa"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="hideModal('newTaskModal')"
+                        class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        Cancelar
+                    </button>
+                    <button onclick="createTask()"
+                        class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
+                        Criar Tarefa
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Modal de Nova Tarefa -->
-  <div id="newTaskModal"
-    class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-    <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-      <div class="p-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Tarefa</h3>
-        <input type="hidden" id="currentListId">
-        <input type="text" id="newTaskTitle" placeholder="Título da Tarefa"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
-        <textarea id="newTaskDescription" placeholder="Descrição (opcional)"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4"
-          rows="3"></textarea>
-        <div class="flex justify-between items-center mb-4">
-          <div>
-            <label class="text-sm text-gray-500 dark:text-gray-400">Prioridade</label>
-            <select id="newTaskPriority"
-              class="ml-2 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
-              <option value="low">Baixa</option>
-              <option value="medium">Média</option>
-              <option value="high">Alta</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-sm text-gray-500 dark:text-gray-400">Data Limite</label>
-            <input type="date" id="newTaskDueDate"
-              class="ml-2 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
-          </div>
+    <!-- Modal de Nova Subtarefa -->
+    <div id="newSubtaskModal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Subtarefa</h3>
+                <input type="hidden" id="currentTaskId">
+                <input type="text" id="newSubtaskTitle" placeholder="Título da Subtarefa"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="hideModal('newSubtaskModal')"
+                        class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        Cancelar
+                    </button>
+                    <button onclick="createSubtask()"
+                        class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
+                        Criar Subtarefa
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="flex justify-end space-x-3">
-          <button onclick="hideModal('newTaskModal')"
-            class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-            Cancelar
-          </button>
-          <button onclick="createTask()" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
-            Criar Tarefa
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Modal de Nova Subtarefa -->
-  <div id="newSubtaskModal"
-    class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-    <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-      <div class="p-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Subtarefa</h3>
-        <input type="hidden" id="currentTaskId">
-        <input type="text" id="newSubtaskTitle" placeholder="Título da Subtarefa"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
-        <div class="flex justify-end space-x-3">
-          <button onclick="hideModal('newSubtaskModal')"
-            class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-            Cancelar
-          </button>
-          <button onclick="createSubtask()" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
-            Criar Subtarefa
-          </button>
+    <!-- Modal de Nova Etapa -->
+    <div id="newStageModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Etapa</h3>
+                <input type="hidden" id="currentSubtaskId">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Quantidade de Etapas
+                    </label>
+                    <input type="number" id="stageUnits" min="1" max="100"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="Digite a quantidade de etapas">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button onclick="hideModal('newStageModal')"
+                        class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        Cancelar
+                    </button>
+                    <button onclick="createStage()"
+                        class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
+                        Criar Etapas
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-<!-- Substituir o Modal de Nova Etapa existente por este -->
-<div id="newStageModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-  <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-      <div class="p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nova Etapa</h3>
-          <input type="hidden" id="currentSubtaskId">
-          <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Quantidade de Etapas
-              </label>
-              <input type="number" id="stageUnits" min="1" max="100"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Digite a quantidade de etapas">
-          </div>
-          <div class="flex justify-end space-x-3">
-              <button onclick="hideModal('newStageModal')"
-                  class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-                  Cancelar
-              </button>
-              <button onclick="createStage()"
-                  class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
-                  Criar Etapas
-              </button>
-          </div>
-      </div>
-  </div>
-</div>
-
-  <!-- Modal de Edição -->
-  <div id="editModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-    <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-      <div class="p-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Editar</h3>
-        <input type="hidden" id="editItemId">
-        <input type="hidden" id="editItemType">
-        <input type="text" id="editItemTitle" placeholder="Título"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
-        <div class="flex justify-end space-x-3">
-          <button onclick="hideModal('editModal')"
-            class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-            Cancelar
-          </button>
-          <button onclick="saveEdit()" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
-            Salvar
-          </button>
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Editar</h3>
+                <input type="hidden" id="editItemId">
+                <input type="hidden" id="editItemType">
+                <input type="text" id="editItemTitle" placeholder="Título"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="hideModal('editModal')"
+                        class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        Cancelar
+                    </button>
+                    <button onclick="saveEdit()" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg">
+                        Salvar
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50"></div>
 
-  <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
+
